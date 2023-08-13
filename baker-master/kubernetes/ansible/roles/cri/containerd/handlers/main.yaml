@@ -1,0 +1,8 @@
+---
+- name: restart containerd service
+  systemd:
+    name: containerd
+    enabled: true
+    state: restarted
+    daemon_reload: yes
+  listen: restart_containerd

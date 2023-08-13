@@ -1,0 +1,16 @@
+---
+- name: install traefik ingress
+  block:
+  - name: copy template
+    template:
+      src:  templates/values.yaml
+      dest: /tmp/traefik-values.yaml
+  
+  - name: helm install traefik
+    command: "helm install stable/traefik --name={{traefik_release_name}} --namespace={{traefik_namespace}} --values=/tmp/traefik-values.yaml"
+  always:
+  - name: delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  /tmp/traefik-values.yaml
+      state: absent

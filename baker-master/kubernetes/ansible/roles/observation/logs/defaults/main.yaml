@@ -1,0 +1,7 @@
+logging_namespace: kube-logging
+
+# `Tivan` named after Taneleer Tivan (a.k.a the Collector) in Marvel Comics
+logging_release_name: tivan
+logging_elasticsearch_release_name: "{{logging_release_name}}-elasticsearch"
+logging_fluentbit_release_name:     "{{logging_release_name}}-fluentbit"
+logging_kibana_release_name:        "{{logging_release_name}}-kibana"

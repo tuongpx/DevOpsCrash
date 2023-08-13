@@ -1,0 +1,10 @@
+---
+- name: install containerd engine
+  include_tasks: "install_{{ansible_os_family}}.yaml"
+
+- name: enable CRI plugin
+  replace:
+    path: /etc/containerd/config.toml
+    regexp:  '^(disabled_plugins.*)'
+    replace: '#\1'
+  notify: restart_containerd

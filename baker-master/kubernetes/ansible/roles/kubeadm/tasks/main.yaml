@@ -1,0 +1,6 @@
+---
+- name: install kubernetes packages
+  include_tasks: "install_{{ansible_os_family}}.yaml"
+
+- name: configure nodes
+  include_tasks: configure.yaml

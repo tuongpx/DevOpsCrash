@@ -1,0 +1,8 @@
+kubernetes_cni: calico
+calico_pod_cidr:  10.244.0.0/16
+
+kubernetes_csi: ceph
+ceph_monitors: ["mon1:6789", "mon2:6789", "mon2:6789"]
+ceph_encoded_password: THISISVERYLONGGGGGGGGGGGGGGENCODEDPASSWORD
+
+traefik_dashboard_domain: traefik.k8s.teko.vn

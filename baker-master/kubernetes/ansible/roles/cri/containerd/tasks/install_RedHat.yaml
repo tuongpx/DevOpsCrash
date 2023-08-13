@@ -1,0 +1,29 @@
+---
+- name: (RedHat) remove old packages
+  yum:
+    name: "{{packages}}"
+    state: absent
+  vars:
+    packages:
+    - docker
+    - docker-client
+    - docker-client-latest
+    - docker-common
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-logrotate
+    - docker-selinux
+    - docker-engine-selinux
+    - docker-engine
+
+- name: (RedHat) add docker yum repository
+  get_url:
+    url: https://download.docker.com/linux/{{ansible_distribution | lower}}/docker-ce.repo
+    dest: /etc/yum.repos.d/docker.repo
+    mode: u=rw,g=r,o=r
+
+- name: (RedHat) install containerd
+  yum:
+    name: containerd.io
+    state: present
+  notify: restart_containerd

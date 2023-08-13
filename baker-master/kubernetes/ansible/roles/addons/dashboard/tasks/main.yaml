@@ -1,0 +1,44 @@
+---
+- name: install kubernetes dashboard
+  block:
+  - name: create temp directory
+    tempfile:
+      state:  directory
+      prefix: dashboard.
+    register: dashboard_tmp_dir
+
+  - name: download kubernetes manifest
+    get_url:
+      url:  "{{dashboard_manifest_url}}"
+      dest: "{{dashboard_tmp_dir.path}}/kubernetes-dashboard.yaml"
+
+  - name: copy kustomize files
+    template:
+      src:  "{{item}}"
+      dest: "{{dashboard_tmp_dir.path}}/{{item | basename}}"
+    with_fileglob:
+    - templates/kustomize/*
+  
+  - name: kubectl apply dashboard
+    command: "kubectl apply -k {{dashboard_tmp_dir.path}}"
+  always:
+  - name: delete temp directory
+    file:
+      path:  "{{dashboard_tmp_dir}}"
+      state: absent
+
+- name: deploy dashboard admin
+  when: dashboard_admin_deployed
+  block:
+  - name: copy template
+    template:
+      src:  "templates/dashboard-rbac.yaml"
+      dest: "/tmp/dashboard-rbac.yaml"
+  
+  - name: apply dashboard admin
+    command: "kubectl apply -f /tmp/dashboard-rbac.yaml"
+  always:
+  - name: delete temp directory
+    file:
+      path:  /tmp/dashboard-rbac.yaml
+      state: absent

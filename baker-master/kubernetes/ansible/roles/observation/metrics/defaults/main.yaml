@@ -1,0 +1,5 @@
+monitoring_namespace: kube-monitoring
+
+# named after Argus Panoptes. Mythical Greek giant/titan with 100 eyes
+# that was all seeing all the time as he never closed them all.
+monitoring_release_name: argus

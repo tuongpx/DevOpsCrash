@@ -1,0 +1,27 @@
+externalURL: "https://{{harbor_core_domain | mandatory}}"
+
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    # if `secretName` is `null` or empty (`""`), helm will auto generate self-signed certificate
+    # with name `{{harbor.fullname}}-ingress` or `{{harbor.fullname}}-nginx`
+    secretName:       "harbor-cert"
+    # By default, the Notary service will use the same cert and key as described above.
+    # Only needed when the type is "ingress".
+    notarySecretName: "notary-cert"
+  ingress:
+    hosts:
+      core:   "{{harbor_core_domain   | mandatory}}"
+      notary: "{{harbor_notary_domain | mandatory}}"
+    annotations:
+      kubernetes.io/tls-acme: "true"
+
+persistence:
+  imageChartStorage:
+    # By default, `persistence.imageChartStorage.type=filesystem`,
+    # harbor will claim 2 PVs to store docker image & helm chart.
+    type: gcs
+    gcs:
+      bucket:     "{{harbor_gcs_bucket_name | mandatory}}"
+      encodedkey: "{{harbor_gcs_sa_key      | b64encode}}"

@@ -1,0 +1,8 @@
+namespace: "{{calico_namespace}}"
+
+resources:
+- calico-namespace.yaml
+- calico.yaml
+
+patchesStrategicMerge:
+- calico-node-patch.yaml

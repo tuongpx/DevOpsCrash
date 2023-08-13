@@ -1,0 +1,12 @@
+---
+- hosts: nodes
+  become: true
+  roles:
+  - "kubeadm"
+
+- hosts: nodes
+  become: true
+  tasks:
+  - name: install CRI runtime
+    include_role:
+      name: "cri/{{kubernetes_cri}}"

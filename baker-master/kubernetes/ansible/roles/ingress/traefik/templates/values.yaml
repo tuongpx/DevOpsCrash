@@ -1,0 +1,34 @@
+dashboard:
+  enabled: true
+  domain: "{{traefik_dashboard_domain | mandatory}}"
+rbac:
+  enabled: true
+# HA mode need a KV storage like: consul, etcd
+# replicas: 3
+serviceType: NodePort
+service:
+  nodePorts:
+    http:  30080
+    https: 30443
+
+ssl:
+  # `ssl.enabled = false`: use HTTP regardless config TLS or not
+  enabled:  true
+  # `ssl.enforced = true`: always redirect to HTTPS regardless config TLS or not
+  enforced: true
+  # `ssl.permanentRedirect = true`: return `308 Permanent Redirect` instead of `307 Temporary Redirect`
+  permanentRedirect: true
+  # `ssl.generateTLS = true`: ignore `ssl.defaultCert` & `ssl.defaultKey` and create a new one
+  generateTLS: true
+
+# This is base on [`lego`](https://github.com/go-acme/lego) lib
+# And no-need to define `spec.tls` session in ingress.
+# Alternative solution: using [`cert-manager`](https://github.com/jetstack/cert-manager)
+acme:
+  enabled: true
+  email: dung.dm@teko.vn
+  challengeType: http-01
+  staging: false  # use Let's Encrypt's production environment
+  logging: true
+  persistence:
+    enabled: false

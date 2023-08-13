@@ -1,0 +1,16 @@
+namespace: "{{metrics_server_namespace}}"
+
+resources:
+- metrics-server-namespace.yaml
+
+- aggregated-metrics-reader.yaml
+- auth-reader.yaml
+- auth-delegator.yaml
+- resource-reader.yaml
+
+- metrics-apiservice.yaml
+- metrics-server-deployment.yaml
+- metrics-server-service.yaml
+
+patchesStrategicMerge:
+- metrics-server-deployment-patch.yaml

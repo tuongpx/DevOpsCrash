@@ -1,0 +1,4 @@
+traefik_namespace: traefik-ingress
+
+# named after Janus - the Roman god of beginnings and endings.
+traefik_release_name: janus

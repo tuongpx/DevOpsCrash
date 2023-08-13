@@ -1,0 +1,39 @@
+---
+- hosts: control
+  become: true
+  tasks:
+  - name: install kubectl
+    include_role:
+      name: "kubectl"
+
+  - name: install CNI
+    include_role:
+      name: "cni/{{kubernetes_cni}}"
+
+  - name: install helm
+    include_role:
+      name: "helm"
+
+  - name: install CSI
+    include_role:
+      name: "csi/{{kubernetes_csi}}"
+
+  - name: install dashboard
+    include_role:
+      name: "addons/dashboard"
+
+  - name: install metrics-server
+    include_role:
+      name: "addons/metrics-server"
+
+  - name: install traefik ingress
+    include_role:
+      name: "addons/traefik"
+
+  - name: install logging
+    include_role:
+      name: "addons/logging"
+
+  - name: install monitoring
+    include_role:
+      name: "addons/monitoring"

@@ -1,0 +1,20 @@
+---
+- name: install external-dns
+  block:
+  - name: copy template
+    template:
+      src:  templates/values.yaml
+      dest: /tmp/external-dns-values.yaml
+
+  - name: helm install prometheus-operator
+    command: |
+      helm install stable/external-dns \
+        --name {{external_dns_release_name}} \
+        --namespace {{external_dns_namespace}} \
+        --values /tmp/external-dns-values.yaml
+  always:
+  - name: delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  /tmp/external-dns-values.yaml
+      state: absent

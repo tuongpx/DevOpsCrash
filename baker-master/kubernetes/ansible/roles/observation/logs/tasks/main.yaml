@@ -1,0 +1,48 @@
+---
+- name: install elasticsearch
+  block:
+  - name: (elasticsearch) copy template
+    template:
+      src:  templates/values/elasticsearch.yaml
+      dest: /tmp/elasticsearch-values.yaml
+
+  - name: (elasticsearch) helm install
+    command: "helm install elastic/elasticsearch --name={{logging_elasticsearch_release_name}} --namespace={{logging_namespace}} --values=/tmp/elasticsearch-values.yaml"
+  always:
+  - name: (elasticsearch) delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  /tmp/elasticsearch-values.yaml
+      state: absent
+
+- name: install kibana
+  block:
+  - name: (kibana) copy template
+    template:
+      src:  templates/values/kibana.yaml
+      dest: /tmp/kibana-values.yaml
+
+  - name: (kibana) helm install
+    command: "helm install elastic/kibana --name={{logging_kibana_release_name}} --namespace={{logging_namespace}} --values=/tmp/kibana-values.yaml"
+  always:
+  - name: (kibana) delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  /tmp/kibana-values.yaml
+      state: absent
+
+- name: install fluentbit
+  block:
+  - name: (fluentbit) copy template
+    template:
+      src:  templates/values/fluentbit.yaml
+      dest: /tmp/fluentbit-values.yaml
+
+  - name: (fluentbit) helm install
+    command: "helm install stable/fluent-bit --name={{logging_fluentbit_release_name}} --namespace={{logging_namespace}} --values=/tmp/fluentbit-values.yaml"
+  always:
+  - name: (fluentbit) delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  /tmp/kibana-values.yaml
+      state: absent

@@ -1,0 +1,23 @@
+ingress:
+  enabled: true
+  host: spinnaker.teko.vn
+
+ingressGate:
+  enabled: true
+  host: gate.spinnaker.teko.vn
+
+halyard:
+  additionalSecrets:
+    create: true
+    data:
+      # b99af3d492270036bb86c22db62179b71cd92309
+      github.token: Yjk5YWYzZDQ5MjI3MDAzNmJiODZjMjJkYjYyMTc5YjcxY2Q5MjMwOQo=
+  additionalScripts:
+    create: true
+    data:
+      configure_artifact.sh: |-
+        GITHUB_TOKEN_FILE=/opt/halyard/additionalSecrets/github.token
+        ARTIFACT_ACCOUNT_NAME=my-github-artifact-account
+
+        $HAL_COMMAND config artifact github enable
+        $HAL_COMMAND config artifact github account add $ARTIFACT_ACCOUNT_NAME --token-file $GITHUB_TOKEN_FILE

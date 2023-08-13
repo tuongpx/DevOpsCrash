@@ -1,0 +1,11 @@
+namespace: "{{ceph_namespace}}"
+
+resources:
+- ceph-namespace.yaml
+
+- csi-attacher-rbac.yaml
+- csi-nodeplugin-rbac.yaml
+- csi-provisioner-rbac.yaml
+- csi-rbdplugin-attacher.yaml
+- csi-rbdplugin-provisioner.yaml
+- csi-rbdplugin.yaml

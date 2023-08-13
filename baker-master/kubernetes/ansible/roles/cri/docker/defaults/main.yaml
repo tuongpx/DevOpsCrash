@@ -1,0 +1,3 @@
+# either stable, nightly, test
+docker_channel: stable
+docker_users: []

@@ -1,0 +1,19 @@
+---
+- name: install harbor ingress
+  block:
+  - name: copy template
+    template:
+      src:  templates/values.yaml
+      dest: /tmp/harbor-values.yaml
+
+  - name: helm install harbor
+    command: |
+      helm install --name={{harbor_release_name}} pearl harbor/harbor \
+        --namespace={{harbor_namespace}} \
+        --values=/tmp/harbor-values.yaml
+  always:
+  - name: delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  /tmp/harbor-values.yaml
+      state: absent

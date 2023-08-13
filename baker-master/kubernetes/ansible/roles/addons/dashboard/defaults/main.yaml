@@ -1,0 +1,5 @@
+dashboard_version: v1.10.1
+dashboard_namespace: kube-system  # kube-dashboard
+dashboard_manifest_url: https://raw.githubusercontent.com/kubernetes/dashboard/{{dashboard_version}}/src/deploy/recommended/kubernetes-dashboard.yaml
+
+dashboard_admin_deployed: yes

@@ -1,0 +1,33 @@
+---
+- name: install calico
+  block:
+  - name: create temp directory
+    tempfile:
+      state:  directory
+      prefix: calico.
+    register: calico_tmp_dir
+
+  - name: download calico.yaml manifest
+    get_url:
+      url:  "{{calico_manifest_url}}"
+      dest: "{{calico_tmp_dir.path}}/calico.yaml"
+
+  - name: copy kustomize files
+    template:
+      src:  "{{item}}"
+      dest: "{{calico_tmp_dir.path}}/{{item | basename}}"
+    with_fileglob:
+    - templates/*
+
+  - name: kubectl apply calico
+    command: "kubectl apply -k {{calico_tmp_dir.path}}"
+  always:
+  - name: delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  "{{calico_tmp_dir}}"
+      state: absent
+
+- name: deploy calicoctl
+  command: kubectl apply -f "{{calicoctl_manifest_url}}"
+  when: calicoctl_deployed

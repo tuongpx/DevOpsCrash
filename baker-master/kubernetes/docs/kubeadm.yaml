@@ -1,0 +1,35 @@
+---
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+# imageRepository: k8s.gcr.io
+# kubernetesVersion: v1.14.0
+# clusterName: kubernetes
+# certificatesDir: /etc/kubernetes/pki
+controlPlaneEndpoint: 172.101.0.40:6443
+networking:
+  podSubnet: 10.244.0.0/16
+#   serviceSubnet: 10.96.0.0/12
+#   dnsDomain: cluster.local
+# etcd:
+#   local:
+#     dataDir: /var/lib/etcd
+apiServer:
+  certSANs:
+  - 103.126.156.80
+#   extraArgs:
+#     authorization-mode: Node,RBAC
+#   timeoutForControlPlane: 4m0s
+# controllerManager: {}
+# scheduler: {}
+# dns:
+#   type: CoreDNS
+
+# TODO: not working
+# kubeProxy:
+#   config:
+#     mode: ipvs
+#     featureGates:
+#       SupportIPVSProxyMode: true
+
+##### TUTORIAL #####
+# kubeadm init --config=kubeadm.yaml --experimental-upload-certs

@@ -1,0 +1,24 @@
+rbac:
+  create: true
+  apiVersion: v1
+
+provider: google
+google:
+  project: "{{external_dns_gcp_project | mandatory}}"
+  # reference to secret contain GCP service-account, need key `credentials.json`
+  serviceAccountSecret: "{{external_dns_gcp_credential_secret | mandatory}}"
+  # or inline GCP service-account key.json
+  # serviceAccountKey: ""
+
+## Modify how DNS records are sychronized between sources and providers (options: sync, upsert-only )
+policy: sync
+## Limit possible target zones by domain suffixes (optional)
+domainFilters:
+- sample.teko.vn
+## Limit possible target zones by zone id (optional)
+zoneIdFilters: []
+# Filter sources managed by external-dns via annotation using label selector semantics (default: all sources)
+annotationFilter: ""
+
+registry: "txt"
+txtOwnerId: "k8s-demos"

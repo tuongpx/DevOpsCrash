@@ -1,0 +1,61 @@
+---
+- name: install ceph-csi RBD
+  block:
+  - name: (RBD) create temp directory
+    tempfile:
+      state:  directory
+      prefix: ceph.
+    register: ceph_rbd_tmp_dir
+  
+  - name: (RBD) download kubernetes manifest
+    get_url:
+      url:  "{{ceph_csi_rbd_manifest_base_url}}/{{item}}"
+      dest: "{{ceph_rbd_tmp_dir.path}}/{{item}}"
+    loop:
+    - csi-attacher-rbac.yaml
+    - csi-nodeplugin-rbac.yaml
+    - csi-provisioner-rbac.yaml
+    - csi-rbdplugin-attacher.yaml
+    - csi-rbdplugin-provisioner.yaml
+    - csi-rbdplugin.yaml
+
+  - name: copy kustomize files
+    template:
+      src:  "{{item}}"
+      dest: "{{ceph_rbd_tmp_dir.path}}/{{item | basename}}"
+    with_fileglob:
+    - templates/rbd-driver/*
+  
+  - name: kubectl apply ceph RBD
+    command: "kubectl apply -k {{ceph_rbd_tmp_dir.path}}"
+  always:
+  - name: (RBD) create temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  "{{ceph_rbd_tmp_dir}}"
+      state: absent
+
+- name: install RBD storage class
+  when: ceph_rbd_deploy_storageclass
+  block:
+  - name: (RBD) create temp directory
+    tempfile:
+      state:  directory
+      prefix: rbd.
+    register: rbd_tmp_dir
+  
+  - name: (RBD) copy kubernetes manifest
+    template:
+      src:  "{{item}}"
+      dest: "{{rbd_tmp_dir.path}}/{{item | basename}}"
+    with_fileglob:
+    - templates/rbd-storageclass/*
+
+  - name: kubectl apply RBD storage class
+    command: "kubectl apply -f {{rbd_tmp_dir.path}}"
+  always:
+  - name: (RBD) delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  "{{rbd_tmp_dir}}"
+      state: absent

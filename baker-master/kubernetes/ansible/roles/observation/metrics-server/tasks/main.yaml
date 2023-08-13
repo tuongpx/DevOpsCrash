@@ -1,0 +1,38 @@
+---
+- name: install metrics-server
+  block:
+  - name: create temp directory
+    tempfile:
+      state:  directory
+      prefix: metrics-server.
+    register: metrics_server_tmp_dir
+
+  - name: download kubernetes manifest
+    get_url:
+      url:  "{{metrics_server_manifest_base_url}}/{{item}}"
+      dest: "{{metrics_server_tmp_dir.path}}/{{item}}"
+    loop:
+    - aggregated-metrics-reader.yaml
+    - auth-reader.yaml
+    - auth-delegator.yaml
+    - resource-reader.yaml
+
+    - metrics-apiservice.yaml
+    - metrics-server-deployment.yaml
+    - metrics-server-service.yaml
+
+  - name: copy kustomize files
+    template:
+      src:  "{{item}}"
+      dest: "{{metrics_server_tmp_dir.path}}/{{item | basename}}"
+    with_fileglob:
+    - templates/kustomize/*
+
+  - name: kubectl apply metrics-server
+    command: "kubectl apply -k {{metrics_server_tmp_dir.path}}"
+  always:
+  - name: delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  "{{metrics_server_tmp_dir}}"
+      state: absent

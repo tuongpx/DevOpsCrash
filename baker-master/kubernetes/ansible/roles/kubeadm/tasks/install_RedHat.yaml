@@ -1,0 +1,32 @@
+---
+# setenforce 0
+# sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+- name: (RedHat) disable SELinux
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: (RedHat) add kubernetes yum repository
+  copy:
+    src:  repo/kubernetes.repo
+    dest: /etc/yum.repos.d/kubernetes.repo
+
+- name: (RedHat) install kubernetes
+  yum:
+    name: "{{packages}}"
+    state: present
+    disable_excludes: kubernetes
+  vars:
+    packages:
+    - kubelet
+    - kubeadm
+    - kubectl
+    - iptables
+    - ipvsadm
+
+- name: (RedHat) start & enable kubelet
+  systemd:
+    name: kubelet
+    enabled: true
+    state: started
+    daemon_reload: yes

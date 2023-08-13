@@ -1,0 +1,6 @@
+calico_version: "v3.6"
+calico_namespace: "kube-system" # kube-networking
+calico_pod_cidr:  "{{kubernetes_pod_cidr | default('192.168.0.0/16')}}"
+calico_manifest_url:    "https://docs.projectcalico.org/{{calico_version}}/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/typha/calico.yaml"
+calicoctl_manifest_url: "https://docs.projectcalico.org/{{calico_version}}/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calicoctl.yaml"
+calicoctl_deployed: false

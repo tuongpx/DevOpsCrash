@@ -1,0 +1,11 @@
+ceph_namespace: kube-system  # kube-storage
+ceph_csi_version: "v1.0"
+
+ceph_csi_rbd_deployed: true
+ceph_csi_rbd_manifest_base_url: https://raw.githubusercontent.com/ceph/ceph-csi/csi-{{ceph_csi_version}}/deploy/rbd/kubernetes
+ceph_rbd_deploy_storageclass: true
+ceph_rbd_pool: rbd
+ceph_user: admin
+
+ceph_csi_cephfs_deployed: false
+ceph_csi_cephfs_manifest_base_url: https://raw.githubusercontent.com/ceph/ceph-csi/csi-{{ceph_csi_version}}/deploy/cephfs/kubernetes

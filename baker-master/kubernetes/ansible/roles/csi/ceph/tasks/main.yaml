@@ -1,0 +1,8 @@
+---
+- name: install ceph-csi rbd
+  include_tasks: rbd.yaml
+  when: ceph_csi_rbd_deployed
+
+- name: install ceph-csi cephfs
+  include_tasks: cephfs.yaml
+  when: ceph_csi_cephfs_deployed

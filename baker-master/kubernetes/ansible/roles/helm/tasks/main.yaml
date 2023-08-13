@@ -1,0 +1,40 @@
+---
+- name: install helm
+  shell: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+
+- name: install tiller
+  block:
+  - name: copy template
+    template:
+      src:  "templates/helm-rbac.yaml"
+      dest: "/tmp/helm-rbac.yaml"
+
+  - name: install tiller
+    shell: |
+      kubectl apply -f /tmp/helm-rbac.yaml
+      helm init --history-max 200 --service-account tiller
+  always:
+  - name: delete temp directory
+    file:
+      path:  /tmp/helm-rbac.yaml
+      state: absent
+
+# TODO: pyhelm is not working with Python 3
+# - name: install helm python packages
+#   block:
+#   - name: install pip
+#     when: ansible_python_version is version('3.0', '<')
+#     package: 
+#       name: "python-pip"
+# 
+#   - name: install pip3
+#     when: ansible_python_version is version('3.0', '>=')
+#     package: 
+#       name: "python3-pip"
+# 
+#   - name: install pyhelm
+#     pip:
+#       name: "{{item}}"
+#     loop:
+#     - pyhelm
+#     - grpcio

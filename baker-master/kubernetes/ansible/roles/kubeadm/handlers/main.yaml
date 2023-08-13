@@ -1,0 +1,9 @@
+- name: reload kernal modules
+  systemd:
+    name:  systemd-modules-load
+    state: restarted
+  listen: reload_kernal_modules
+
+- name: reload_sysctl
+  command: sysctl --system
+  listen: reload_sysctl

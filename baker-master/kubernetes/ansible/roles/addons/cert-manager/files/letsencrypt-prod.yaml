@@ -1,0 +1,27 @@
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer # ref: https://docs.cert-manager.io/en/latest/reference/clusterissuers.html
+metadata:
+  name: letsencrypt-prod
+spec:
+  # ref: https://docs.cert-manager.io/en/latest/tasks/issuers/index.html#supported-issuer-types
+  acme:
+    # The ACME server URL
+    #  Staging:    https://acme-staging-v02.api.letsencrypt.org/directory
+    #              https://acme-staging.api.letsencrypt.org/directory
+    #  Production: https://acme-v02.api.letsencrypt.org/directory
+    #              https://acme-v01.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: dung.dm@teko.vn
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    # Enable HTTP01 validations
+    #  ref: https://docs.cert-manager.io/en/latest/tasks/acme/configuring-http01.html
+    http01: {}
+    # DNS01 Challenge Provider
+    #  ref: https://docs.cert-manager.io/en/latest/tasks/acme/configuring-dns01/index.html
+
+# Automatically creating Certificates for Ingress resources
+# https://docs.cert-manager.io/en/latest/tasks/issuing-certificates/ingress-shim.html

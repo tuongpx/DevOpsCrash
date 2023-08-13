@@ -1,0 +1,43 @@
+---
+- name: (Deian) install required packages
+  apt:
+    name: "{{packages}}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - apt-transport-https
+
+- name: (Deian) add kubernetes apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: (Deian) add kubernetes apt repository
+  apt_repository:
+    repo: deb [arch=amd64] https://apt.kubernetes.io/ kubernetes-xenial main
+    filename: kubernetes
+    state: present
+
+- name: (Deian) install kubernetes
+  apt:
+    name: "{{packages}}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - kubelet
+    - kubeadm
+    - kubectl
+    - iptables
+    - ipvsadm
+
+- name: (Debian) hold packages
+  command: apt-mark hold kubelet kubeadm kubectl
+
+- name: (Deian) start & enable kubelet
+  systemd:
+    name: kubelet
+    enabled: true
+    state: started
+    daemon_reload: yes

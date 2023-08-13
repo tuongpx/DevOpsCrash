@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-conf
+data:
+  spark.properties: |
+    spark.master=k8s://https://kubernetes.default

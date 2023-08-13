@@ -1,0 +1,16 @@
+---
+- name: install prometheus-operator
+  block:
+  - name: copy template
+    template:
+      src:  templates/values.yaml
+      dest: /tmp/prometheus-operator-values.yaml
+  
+  - name: helm install prometheus-operator
+    command: "helm install stable/prometheus-operator --name={{monitoring_release_name}} --namespace={{monitoring_namespace}} --values=/tmp/prometheus-operator-values.yaml"
+  always:
+  - name: delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  /tmp/prometheus-operator-values.yaml
+      state: absent

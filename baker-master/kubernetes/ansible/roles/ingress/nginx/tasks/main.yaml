@@ -1,0 +1,20 @@
+---
+- name: install nginx ingress
+  block:
+  - name: copy template
+    template:
+      src:  templates/values.yaml
+      dest: /tmp/nginx-values.yaml
+
+  - name: helm install nginx
+    command: |
+      helm install stable/nginx-ingress   \
+        --name={{nginx_release_name}}   \
+        --namespace={{nginx_namespace}} \
+        --values=/tmp/nginx-values.yaml
+  always:
+  - name: delete temp directory
+    when: manifest_clean_up | default(true)
+    file:
+      path:  /tmp/nginx-values.yaml
+      state: absent

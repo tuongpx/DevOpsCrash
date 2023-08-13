@@ -1,0 +1,11 @@
+---
+- name: (RedHat) add kubernetes yum repository
+  copy:
+    src:  kubernetes.repo
+    dest: /etc/yum.repos.d/kubernetes.repo
+
+- name: (RedHat) install kubectl
+  yum:
+    name:  kubectl
+    state: present
+    disable_excludes: kubernetes
