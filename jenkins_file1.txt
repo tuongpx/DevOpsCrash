@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Git clone') {
+            steps{
+                git branch: 'main', url: 'https://github.com/phamngoctu84/testrepo.git'
+            }
+        }
+        stage('Test') {
+            steps{
+                echo "Testing completed"
+            }
+        }
+        stage('Build') {
+            steps{
+                echo "Build completed"
+            }
+        }
+    }
+}
